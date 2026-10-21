@@ -1,24 +1,47 @@
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, Link } from "@tanstack/react-router";
+import { useEffect, useState } from "react";
+import { PICTURES } from "@/lib/pictures";
+import { loadProgress, PixelArt } from "@/components/PixelArt";
 
-// No head() here: the home route inherits title/description/og/twitter from
-// __root.tsx, and ships no og:image so serve-time hosting can inject the
-// project's social preview (explicit og:image or latest screenshot).
 export const Route = createFileRoute("/")({
+  head: () => ({
+    meta: [
+      { title: "Taxmålarbok – måla taxar med siffror" },
+      { name: "description", content: "Avkopplande målarspel med siffror där alla bilder är taxar." },
+      { property: "og:title", content: "Taxmålarbok" },
+      { property: "og:description", content: "Måla taxar med siffror – helt utan reklam." },
+      { property: "og:type", content: "website" },
+      { name: "twitter:card", content: "summary" },
+    ],
+  }),
   component: Index,
 });
 
-// IMPORTANT: Replace this placeholder. See ./README.md for routing conventions.
 function Index() {
+  const [progress, setProgress] = useState<Record<string, boolean[][] | null>>({});
+  useEffect(() => {
+    setProgress(Object.fromEntries(PICTURES.map((p) => [p.id, loadProgress(p)])));
+  }, []);
   return (
-    <div
-      className="flex min-h-screen items-center justify-center"
-      style={{ backgroundColor: "#fcfbf8" }}
-    >
-      <img
-        data-lovable-blank-page-placeholder="REMOVE_THIS"
-        src="https://cdn.gpteng.co/blank-app-v1.svg"
-        alt="Your app will live here!"
-      />
-    </div>
+    <main className="mx-auto min-h-screen max-w-md px-4 pb-10 pt-8">
+      <h1 className="font-display text-4xl text-primary">Taxmålarbok</h1>
+      <p className="mb-6 text-muted-foreground">Välj en tax att måla 🐾</p>
+      <div className="grid grid-cols-2 gap-4">
+        {PICTURES.map((p) => {
+          const pr = progress[p.id];
+          const total = p.grid.flat().length;
+          const done = pr ? pr.flat().filter(Boolean).length : 0;
+          return (
+            <Link key={p.id} to="/mala/$id" params={{ id: p.id }} className="rounded-3xl bg-card p-3 shadow-soft transition active:scale-95">
+              <PixelArt picture={p} painted={pr ?? null} preview />
+              <div className="mt-2 flex items-center justify-between text-sm">
+                <span className="font-semibold">{p.name}</span>
+                <span className="text-muted-foreground">{Math.round((done / total) * 100)}%</span>
+              </div>
+            </Link>
+          );
+        })}
+      </div>
+    </main>
   );
 }
