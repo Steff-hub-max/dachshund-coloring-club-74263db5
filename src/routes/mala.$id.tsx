@@ -1,7 +1,7 @@
 import { createFileRoute, Link, notFound } from "@tanstack/react-router";
 import { useEffect, useRef, useState } from "react";
 import { PICTURES } from "@/lib/pictures";
-import { loadProgress, PixelArt, saveProgress } from "@/components/PixelArt";
+import { getRegions, loadProgress, PixelArt, saveProgress } from "@/components/PixelArt";
 
 export const Route = createFileRoute("/mala/$id")({
   loader: ({ params }) => {
