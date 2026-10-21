@@ -24,28 +24,33 @@ export const Route = createFileRoute("/mala/$id")({
 
 function Paint() {
   const p = Route.useLoaderData();
-  const empty = () => p.grid.map((r) => r.map(() => false));
-  const [painted, setPainted] = useState<boolean[][]>(empty);
+  const reg = getRegions(p);
+  const empty = () => reg.color.map(() => false);
+  const [painted, setPainted] = useState<boolean[]>(empty);
   const [sel, setSel] = useState(0);
   const [zoom, setZoom] = useState(1);
   const drawing = useRef(false);
   const ref = useRef<HTMLDivElement>(null);
 
-  useEffect(() => setPainted(loadProgress(p) ?? empty()), [p.id]);
+  useEffect(() => {
+    const l = loadProgress(p);
+    setPainted(l && l.length === reg.color.length ? l : empty());
+  }, [p.id]);
 
-  const remaining = (c: number) => p.grid.flat().filter((v, i) => v === c && !painted.flat()[i]).length;
-  const done = painted.flat().every(Boolean);
+  const remaining = (c: number) => reg.color.filter((v, i) => v === c && !painted[i]).length;
+  const done = painted.every(Boolean);
 
   const paintAt = (cx: number, cy: number) => {
     const el = ref.current?.querySelector("svg");
     if (!el) return;
     const r = el.getBoundingClientRect();
-    const x = Math.floor(((cx - r.left) / r.width) * p.grid[0]!.length);
-    const y = Math.floor(((cy - r.top) / r.height) * p.grid.length);
-    if (p.grid[y]?.[x] !== sel || painted[y]?.[x]) return;
+    const x = Math.floor(((cx - r.left) / r.width) * reg.ids[0]!.length);
+    const y = Math.floor(((cy - r.top) / r.height) * reg.ids.length);
+    const id = reg.ids[y]?.[x];
+    if (id === undefined || reg.color[id] !== sel || painted[id]) return;
     setPainted((prev) => {
-      const n = prev.map((row) => [...row]);
-      n[y]![x] = true;
+      const n = [...prev];
+      n[id] = true;
       saveProgress(p, n);
       return n;
     });

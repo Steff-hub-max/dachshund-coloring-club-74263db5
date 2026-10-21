@@ -1,7 +1,7 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
 import { PICTURES } from "@/lib/pictures";
-import { loadProgress, PixelArt } from "@/components/PixelArt";
+import { getRegions, loadProgress, PixelArt } from "@/components/PixelArt";
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -18,7 +18,7 @@ export const Route = createFileRoute("/")({
 });
 
 function Index() {
-  const [progress, setProgress] = useState<Record<string, boolean[][] | null>>({});
+  const [progress, setProgress] = useState<Record<string, boolean[] | null>>({});
   useEffect(() => {
     setProgress(Object.fromEntries(PICTURES.map((p) => [p.id, loadProgress(p)])));
   }, []);
@@ -29,8 +29,8 @@ function Index() {
       <div className="grid grid-cols-2 gap-4">
         {PICTURES.map((p) => {
           const pr = progress[p.id];
-          const total = p.grid.flat().length;
-          const done = pr ? pr.flat().filter(Boolean).length : 0;
+          const total = getRegions(p).color.length;
+          const done = pr ? pr.filter(Boolean).length : 0;
           return (
             <Link key={p.id} to="/mala/$id" params={{ id: p.id }} className="rounded-3xl bg-card p-3 shadow-soft transition active:scale-95">
               <PixelArt picture={p} painted={pr ?? null} preview />
