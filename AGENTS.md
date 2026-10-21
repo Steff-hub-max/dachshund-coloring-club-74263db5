@@ -8,3 +8,5 @@
 > Commits you push to the connected branch sync back to Lovable and show up in
 > the editor, so keep the branch in a working state.
 <!-- LOVABLE:END -->
+
+- Offline support uses vite-plugin-pwa (generateSW, outDir dist/client) registered only via src/lib/register-sw.ts, which refuses dev/preview hosts; keeps previews free of stale caches.
