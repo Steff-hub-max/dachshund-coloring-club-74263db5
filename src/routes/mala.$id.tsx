@@ -42,10 +42,10 @@ function Paint() {
     const r = el.getBoundingClientRect();
     const x = Math.floor(((cx - r.left) / r.width) * p.grid[0].length);
     const y = Math.floor(((cy - r.top) / r.height) * p.grid.length);
-    if (p.grid[y]?.[x] !== sel || painted[y][x]) return;
+    if (p.grid[y]?.[x] !== sel || painted[y]?.[x]) return;
     setPainted((prev) => {
       const n = prev.map((row) => [...row]);
-      n[y][x] = true;
+      n[y]![x] = true;
       saveProgress(p, n);
       return n;
     });

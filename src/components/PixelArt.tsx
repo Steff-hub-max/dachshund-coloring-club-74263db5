@@ -29,7 +29,7 @@ export function PixelArt({
   picture: Picture;
   painted: boolean[][] | null;
   preview?: boolean;
-  selected?: number;
+  selected?: number | undefined;
 }) {
   const h = picture.grid.length;
   const w = picture.grid[0].length;
