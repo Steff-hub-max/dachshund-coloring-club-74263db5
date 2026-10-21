@@ -33,7 +33,7 @@ function Index() {
           const done = pr ? pr.flat().filter(Boolean).length : 0;
           return (
             <Link key={p.id} to="/mala/$id" params={{ id: p.id }} className="rounded-3xl bg-card p-3 shadow-soft transition active:scale-95">
-              <PixelArt picture={p} painted={pr} preview />
+              <PixelArt picture={p} painted={pr ?? null} preview />
               <div className="mt-2 flex items-center justify-between text-sm">
                 <span className="font-semibold">{p.name}</span>
                 <span className="text-muted-foreground">{Math.round((done / total) * 100)}%</span>

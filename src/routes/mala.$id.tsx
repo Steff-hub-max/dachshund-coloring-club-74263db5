@@ -40,7 +40,7 @@ function Paint() {
     const el = ref.current?.querySelector("svg");
     if (!el) return;
     const r = el.getBoundingClientRect();
-    const x = Math.floor(((cx - r.left) / r.width) * p.grid[0].length);
+    const x = Math.floor(((cx - r.left) / r.width) * p.grid[0]!.length);
     const y = Math.floor(((cy - r.top) / r.height) * p.grid.length);
     if (p.grid[y]?.[x] !== sel || painted[y]?.[x]) return;
     setPainted((prev) => {

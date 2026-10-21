@@ -32,13 +32,13 @@ export function PixelArt({
   selected?: number | undefined;
 }) {
   const h = picture.grid.length;
-  const w = picture.grid[0].length;
+  const w = picture.grid[0]!.length;
   return (
     <svg viewBox={`0 0 ${w} ${h}`} className="block w-full rounded-2xl" shapeRendering="crispEdges">
       {picture.grid.map((row, y) =>
         row.map((c, x) => {
           const isPainted = painted?.[y]?.[x];
-          const fill = isPainted ? picture.palette[c] : grayOf(picture.palette[c]);
+          const fill = isPainted ? picture.palette[c] : grayOf(picture.palette[c]!);
           const hl = !isPainted && selected === c;
           return (
             <g key={`${x}-${y}`}>

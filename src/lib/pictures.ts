@@ -20,7 +20,7 @@ function compose(bg: string[], dogOffsetY: number, extra: Record<string, string>
   const rows = bg.map((r) => r.padEnd(W, r[0]).slice(0, W).split(""));
   DOG.forEach((r, y) =>
     r.split("").forEach((ch, x) => {
-      if (ch !== "." && rows[y + dogOffsetY]) rows[y + dogOffsetY][x] = extra[ch] ?? ch;
+      if (ch !== "." && rows[y + dogOffsetY]) rows[y + dogOffsetY]![x] = extra[ch] ?? ch;
     }),
   );
   return rows;
@@ -31,7 +31,7 @@ function build(id: string, name: string, colors: Record<string, string>, rows: s
   return {
     id,
     name,
-    palette: keys.map((k) => colors[k]),
+    palette: keys.map((k) => colors[k]!),
     grid: rows.map((r) => r.map((ch) => Math.max(0, keys.indexOf(ch)))),
   };
 }
